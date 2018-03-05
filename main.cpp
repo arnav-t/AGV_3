@@ -19,7 +19,7 @@ using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-	char path[32];
+	char path[32] = DEFAULT_DATASET;
 	if(argc == 2)
 		strcpy(path, argv[1]);
 	Localization l(path);

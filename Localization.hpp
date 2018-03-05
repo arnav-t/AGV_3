@@ -52,10 +52,8 @@ public:
 			float x1 = in;
 			data >> in;
 			float y1 = in;
-			Eigen::MatrixXd tempZx;
-			Eigen::MatrixXd tempZy;
-			tempZx(2,1);
-			tempZy(2,1);
+			Eigen::MatrixXd tempZx(2,1);
+			Eigen::MatrixXd tempZy(2,1);
 			tempZx(0,0) = x1;
 			tempZx(1,0) = (x1-x)/dt;
 			tempZy(0,0) = y1;
