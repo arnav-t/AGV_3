@@ -23,5 +23,6 @@ int main(int argc, char *argv[])
 	if(argc == 2)
 		strcpy(path, argv[1]);
 	Localization l(path);
+	l.predict();
 	return 0;
 }
