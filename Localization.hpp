@@ -11,13 +11,15 @@ private:
 	float dt;
 	std::vector<Eigen::MatrixXd> Zx;
 	std::vector<Eigen::MatrixXd> Zy;
+	std::vector<Eigen::MatrixXd> X_vec;
+	std::vector<Eigen::MatrixXd> Y_vec;
 	Eigen::MatrixXd F;
 	Eigen::MatrixXd Px;
 	Eigen::MatrixXd Py;
 	Eigen::MatrixXd R;
-	void calculate(Eigen::MatrixXd Znext, Eigen::MatrixXd Z, Eigen::MatrixXd &P)
+	Eigen::MatrixXd calculate(Eigen::MatrixXd Znext, Eigen::MatrixXd Xprev, Eigen::MatrixXd &P)
 	{
-		Eigen::MatrixXd X = F*Z;
+		Eigen::MatrixXd X = F*Xprev;
 		P = F*P*F.transpose();
 		Eigen::MatrixXd K = P*((P + R).inverse());
 		Eigen::MatrixXd X_ = X + K*(Znext - X);
@@ -26,6 +28,7 @@ private:
 		std::cout << "Velocity: " << X_(1,0) << std::endl;
 		std::cout << "Uncertainty Matrix:\n";
 		std::cout << P_ << std::endl;
+		return X_;
 	}
 public:
 	Localization(char *DataFile)
@@ -66,12 +69,14 @@ public:
 	}
 	void predict()
 	{
+		X_vec.push_back(Zx[0]);
+		Y_vec.push_back(Zy[0]);
 		for(int i = 1; i < Zx.size(); ++i)
 		{
 			std::cout << "\n\nx-axis\n";
-			calculate(Zx[i], Zx[i-1], Px);
+			X_vec.push_back(calculate(Zx[i], X_vec.back(), Px));
 			std::cout << "\ny-axis\n";
-			calculate(Zy[i], Zy[i-1], Py);
+			Y_vec.push_back(calculate(Zy[i], Y_vec.back(), Py));
 		}
 	}
 };
